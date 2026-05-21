@@ -1,2 +1,28 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// Tema MAGA - Restaurante
+:root {
+  --ion-color-primary: #c0392b;
+  --ion-color-primary-rgb: 192, 57, 43;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #a93226;
+  --ion-color-primary-tint: #cd6155;
+
+  --ion-color-secondary: #e67e22;
+  --ion-color-secondary-rgb: 230, 126, 34;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #ca6f1e;
+  --ion-color-secondary-tint: #e98b38;
+
+  --ion-color-success: #27ae60;
+  --ion-color-success-rgb: 39, 174, 96;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-shade: #229954;
+  --ion-color-success-tint: #3cb371;
+
+  --ion-color-danger: #e74c3c;
+  --ion-color-danger-rgb: 231, 76, 60;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #cb4335;
+  --ion-color-danger-tint: #e95e4f;
+}

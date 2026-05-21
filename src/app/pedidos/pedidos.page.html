@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>📋 Pedidos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cargarPedidos()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando pedidos...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="cargarPedidos()" fill="outline" color="primary">Reintentar</ion-button>
+  </div>
+
+  <div *ngIf="!cargando && !error && pedidos.length === 0" class="vacio-container">
+    <ion-icon name="receipt-outline" class="vacio-icon"></ion-icon>
+    <p>No hay pedidos aún</p>
+  </div>
+
+  <ion-list *ngIf="!cargando && pedidos.length > 0">
+    <ion-card *ngFor="let pedido of pedidos" class="pedido-card">
+      <ion-card-header>
+        <div class="pedido-header">
+          <ion-card-title>Pedido #{{ pedido.id }}</ion-card-title>
+          <ion-badge [color]="getColorEstado(pedido.estado)">{{ pedido.estado }}</ion-badge>
+        </div>
+        <ion-card-subtitle>
+          {{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}
+          &nbsp;·&nbsp; 🪑 Mesa {{ pedido.numeroMesa }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item *ngFor="let detalle of pedido.detalles">
+            <ion-label>
+              <span class="producto-nombre">{{ detalle.nombreProducto }}</span>
+              <span class="cantidad"> x{{ detalle.cantidad }}</span>
+            </ion-label>
+            <ion-note slot="end">${{ detalle.subtotal | number:'1.0-0' }}</ion-note>
+          </ion-item>
+        </ion-list>
+        <div class="total-row">
+          <strong>Total: ${{ pedido.total | number:'1.0-0' }}</strong>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+</ion-content>

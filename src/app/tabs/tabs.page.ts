@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CarritoService } from '../services/carrito.service';
 
 @Component({
   selector: 'app-tabs',
@@ -6,8 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss'],
   standalone: false,
 })
-export class TabsPage {
+export class TabsPage implements OnInit {
+  cantidadCarrito = 0;
 
-  constructor() {}
+  constructor(private carritoService: CarritoService) {}
 
+  ngOnInit() {
+    this.carritoService.items$.subscribe(items => {
+      this.cantidadCarrito = items.reduce((sum, i) => sum + i.cantidad, 0);
+    });
+  }
 }

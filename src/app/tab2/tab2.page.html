@@ -1,17 +1,87 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>🛒 Mi Carrito</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <!-- Pedido confirmado -->
+  <div *ngIf="pedidoConfirmado" class="confirmado-container">
+    <ion-icon name="checkmark-circle" color="success" class="check-icon"></ion-icon>
+    <h2>¡Pedido #{{ pedidoConfirmado.id }} confirmado!</h2>
+    <p>🪑 Mesa: <strong>{{ pedidoConfirmado.numeroMesa }}</strong></p>
+    <p>Estado: <strong>{{ pedidoConfirmado.estado }}</strong></p>
+    <p>Total: <strong>${{ pedidoConfirmado.total.toFixed(2) }}</strong></p>
+    <ion-list>
+      <ion-item *ngFor="let d of pedidoConfirmado.detalles">
+        <ion-label>
+          {{ d.nombreProducto }} x{{ d.cantidad }}
+          <p>${{ d.subtotal.toFixed(2) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Carrito vacío -->
+  <div *ngIf="items.length === 0 && !pedidoConfirmado" class="vacio-container">
+    <ion-icon name="cart-outline" class="vacio-icon"></ion-icon>
+    <p>Tu carrito está vacío</p>
+    <p class="vacio-sub">Ve al menú y agrega productos</p>
+  </div>
+
+  <!-- Selector de mesa -->
+  <div *ngIf="items.length > 0 && !pedidoConfirmado" class="mesa-container">
+    <ion-item lines="full">
+      <ion-icon name="restaurant-outline" slot="start" color="primary"></ion-icon>
+      <ion-label position="stacked">Número de mesa</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="numeroMesa"
+        placeholder="Ej: 5"
+        min="1"
+        inputmode="numeric"
+      ></ion-input>
+    </ion-item>
+  </div>
+
+  <!-- Items del carrito -->
+  <ion-list *ngIf="items.length > 0 && !pedidoConfirmado">
+    <ion-item *ngFor="let item of items">
+      <ion-thumbnail slot="start">
+        <img [src]="item.producto.imagenUrl" [alt]="item.producto.nombre" />
+      </ion-thumbnail>
+      <ion-label>
+        <h3>{{ item.producto.nombre }}</h3>
+        <p>${{ item.producto.precio.toFixed(2) }} c/u</p>
+        <p class="subtotal">Subtotal: ${{ (item.producto.precio * item.cantidad).toFixed(2) }}</p>
+      </ion-label>
+      <div slot="end" class="cantidad-controls">
+        <ion-button fill="clear" size="small" (click)="disminuir(item)">
+          <ion-icon name="remove-circle-outline"></ion-icon>
+        </ion-button>
+        <span class="cantidad">{{ item.cantidad }}</span>
+        <ion-button fill="clear" size="small" (click)="aumentar(item)">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="eliminar(item)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-list>
+
 </ion-content>
+
+<!-- Footer con total y botón -->
+<ion-footer *ngIf="items.length > 0 && !pedidoConfirmado">
+  <ion-toolbar>
+    <div class="footer-content">
+      <span class="total-label">Total: <strong>${{ total.toFixed(2) }}</strong></span>
+      <ion-button color="primary" (click)="confirmarPedido()">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Confirmar Pedido
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

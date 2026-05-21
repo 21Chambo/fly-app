@@ -1,17 +1,53 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>🍽️ Menú MAGA</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- Filtro de categorías -->
+  <div class="categorias-scroll">
+    <ion-chip
+      [color]="categoriaSeleccionada === null ? 'primary' : 'medium'"
+      (click)="filtrarPorCategoria(null)">
+      Todos
+    </ion-chip>
+    <ion-chip
+      *ngFor="let cat of categorias"
+      [color]="categoriaSeleccionada === cat.id ? 'primary' : 'medium'"
+      (click)="filtrarPorCategoria(cat.id)">
+      {{ cat.nombre }}
+    </ion-chip>
+  </div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <!-- Lista de productos -->
+  <ion-grid *ngIf="!cargando">
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let producto of productos">
+        <ion-card class="producto-card">
+          <img [src]="producto.imagenUrl" [alt]="producto.nombre" class="producto-img" />
+          <ion-card-header>
+            <ion-card-title>{{ producto.nombre }}</ion-card-title>
+            <ion-card-subtitle>{{ producto.categoriaNombre }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="descripcion">{{ producto.descripcion }}</p>
+            <p class="ingredientes"><strong>Ingredientes:</strong> {{ producto.ingredientes }}</p>
+            <div class="precio-row">
+              <span class="precio">$ {{ producto.precio | number:'1.0-0' }}</span>
+              <ion-button size="small" color="primary" (click)="agregarAlCarrito(producto)">
+                <ion-icon name="cart-outline" slot="start"></ion-icon>
+                Agregar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -1,0 +1,42 @@
+.loading-container, .error-container, .vacio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+.vacio-icon {
+  font-size: 72px;
+  margin-bottom: 12px;
+}
+
+.pedido-card {
+  margin: 8px;
+  border-radius: 12px;
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.producto-nombre {
+  font-weight: 500;
+}
+
+.cantidad {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.total-row {
+  text-align: right;
+  padding-top: 8px;
+  font-size: 1.1rem;
+  border-top: 1px solid #eee;
+  margin-top: 8px;
+}
