@@ -1,0 +1,26 @@
+<ion-chip [color]="statusColor" (click)="getCurrentLocation()">
+  <ion-icon [name]="statusIcon"></ion-icon>
+  <ion-label>{{ statusText }}</ion-label>
+</ion-chip>
+
+<!-- Detailed status (only show if there's an error) -->
+<ion-item *ngIf="transmissionStatus.error || gpsStatus.error" lines="none">
+  <ion-icon name="warning" color="danger" slot="start"></ion-icon>
+  <ion-label class="ion-text-wrap">
+    <p>{{ transmissionStatus.error || gpsStatus.error }}</p>
+    <p *ngIf="!gpsStatus.hasPermission">
+      <ion-button size="small" fill="outline" (click)="requestPermissions()">
+        Activar GPS
+      </ion-button>
+    </p>
+  </ion-label>
+</ion-item>
+
+<!-- Last location info (for debugging) -->
+<ion-item *ngIf="gpsStatus.lastLocation && transmissionStatus.lastTransmission" lines="none">
+  <ion-icon name="time" color="medium" slot="start"></ion-icon>
+  <ion-label>
+    <p>Última ubicación: {{ transmissionStatus.lastTransmission | date:'HH:mm:ss' }}</p>
+    <p>Precisión: {{ gpsStatus.lastLocation.accuracy | number:'1.0-0' }}m</p>
+  </ion-label>
+</ion-item>

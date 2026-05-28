@@ -1,0 +1,18 @@
+ion-chip {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+ion-chip:hover {
+  transform: scale(1.05);
+}
+
+ion-item {
+  --background: transparent;
+  font-size: 0.9em;
+}
+
+ion-item p {
+  margin: 2px 0;
+  color: var(--ion-color-medium);
+}

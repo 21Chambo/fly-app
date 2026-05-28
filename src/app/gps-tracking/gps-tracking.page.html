@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>GPS Tracking - Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" [disabled]="isLoading">
+        <ion-icon name="refresh" [class.spin]="isLoading"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Status Header -->
+  <ion-card>
+    <ion-card-content>
+      <div class="status-header">
+        <div class="status-item">
+          <ion-icon name="people" color="primary"></ion-icon>
+          <span>{{ employeeLocations.length }} empleados activos</span>
+        </div>
+        <div class="status-item">
+          <ion-icon name="time" color="medium"></ion-icon>
+          <span *ngIf="lastUpdate">Actualizado: {{ lastUpdate | date:'HH:mm:ss' }}</span>
+          <span *ngIf="!lastUpdate">Sin actualizar</span>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Error Message -->
+  <ion-card *ngIf="error" color="danger">
+    <ion-card-content>
+      <ion-icon name="warning" slot="start"></ion-icon>
+      {{ error }}
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando ubicaciones...</p>
+  </div>
+
+  <!-- Simple Map View (Text-based for MVP) -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="location" color="primary"></ion-icon>
+        Mapa de Ubicaciones
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Restaurant Location -->
+      <div class="location-item restaurant">
+        <div class="location-header">
+          <ion-icon name="restaurant" color="danger"></ion-icon>
+          <strong>{{ restaurantLocation.name }}</strong>
+          <ion-chip color="danger" size="small">Restaurante</ion-chip>
+        </div>
+        <div class="location-coords">
+          📍 {{ restaurantLocation.latitude | number:'1.4-4' }}, {{ restaurantLocation.longitude | number:'1.4-4' }}
+        </div>
+      </div>
+
+      <ion-item-divider>
+        <ion-label>Empleados Activos</ion-label>
+      </ion-item-divider>
+
+      <!-- Employee Locations -->
+      <div *ngFor="let location of employeeLocations" class="location-item employee">
+        <div class="location-header">
+          <ion-icon [name]="getEmployeeIcon(location.role)" [color]="getEmployeeColor(location.role)"></ion-icon>
+          <strong>{{ location.employeeName }}</strong>
+          <ion-chip [color]="getEmployeeColor(location.role)" size="small">
+            {{ location.role === 'DELIVERY_PERSON' ? 'Repartidor' : 
+               location.role === 'SUPERVISOR' ? 'Supervisor' : 'Empleado' }}
+          </ion-chip>
+        </div>
+        
+        <div class="location-details">
+          <div class="location-coords">
+            📍 {{ location.latitude | number:'1.4-4' }}, {{ location.longitude | number:'1.4-4' }}
+          </div>
+          
+          <div class="location-info">
+            <span class="info-item">
+              <ion-icon name="time" size="small"></ion-icon>
+              {{ formatTimestamp(location.timestamp) }}
+            </span>
+            
+            <span class="info-item" *ngIf="location.accuracy">
+              <ion-icon name="radio" size="small"></ion-icon>
+              ±{{ location.accuracy | number:'1.0-0' }}m
+            </span>
+            
+            <span class="info-item" *ngIf="location.batteryLevel">
+              <ion-icon name="battery-half" size="small"></ion-icon>
+              {{ location.batteryLevel }}%
+            </span>
+          </div>
+          
+          <div class="location-status">
+            <ion-chip [color]="getStatusColor(location.withinPerimeter)" size="small">
+              <ion-icon [name]="location.withinPerimeter ? 'checkmark-circle' : 'location-outline'"></ion-icon>
+              <ion-label>{{ getStatusText(location.withinPerimeter) }}</ion-label>
+            </ion-chip>
+            
+            <span class="distance">
+              🚶 {{ getDistanceToRestaurant(location) | number:'1.0-0' }}m del restaurante
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- No employees message -->
+      <div *ngIf="employeeLocations.length === 0 && !isLoading" class="no-employees">
+        <ion-icon name="people-outline" size="large" color="medium"></ion-icon>
+        <p>No hay empleados con GPS activo</p>
+        <ion-button fill="outline" (click)="refresh()">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          Actualizar
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Statistics Card -->
+  <ion-card *ngIf="employeeLocations.length > 0">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="stats-chart" color="primary"></ion-icon>
+        Estadísticas
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">{{ employeeLocations.filter(l => l.withinPerimeter).length }}</div>
+          <div class="stat-label">En restaurante</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ employeeLocations.filter(l => !l.withinPerimeter).length }}</div>
+          <div class="stat-label">Fuera</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ employeeLocations.filter(l => l.role === 'DELIVERY_PERSON').length }}</div>
+          <div class="stat-label">Repartidores</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ employeeLocations.filter(l => l.batteryLevel && l.batteryLevel < 20).length }}</div>
+          <div class="stat-label">Batería baja</div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

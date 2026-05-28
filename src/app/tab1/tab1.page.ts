@@ -25,16 +25,19 @@ export class Tab1Page implements OnInit {
     private toastCtrl: ToastController
   ) {}
 
-  ngOnInit() {}
-
-  ionViewWillEnter() {
+  ngOnInit() {
     this.cargarCategorias();
-    setTimeout(() => this.cargarProductos(), 300);
+    this.cargarProductos();
   }
 
   cargarCategorias() {
-    this.categoriaService.listar().subscribe(data => {
-      this.categorias = data;
+    this.categoriaService.listar().subscribe({
+      next: data => {
+        this.categorias = data;
+      },
+      error: err => {
+        console.error('Error cargando categorias:', err);
+      }
     });
   }
 
@@ -49,15 +52,9 @@ export class Tab1Page implements OnInit {
         this.productos = data;
         this.cargando = false;
       },
-      error: async (err) => {
+      error: err => {
+        console.error('Error cargando productos:', err);
         this.cargando = false;
-        const toast = await this.toastCtrl.create({
-          message: `Error: ${err.status} - ${err.message}`,
-          duration: 5000,
-          color: 'danger',
-          position: 'top'
-        });
-        toast.present();
       }
     });
   }

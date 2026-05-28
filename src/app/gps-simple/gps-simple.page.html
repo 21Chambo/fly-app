@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>GPS Tracking Dashboard</ion-title>
+    <ion-title>GPS Tracking - Simple</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="refresh()" [disabled]="isLoading">
         <ion-icon name="refresh"></ion-icon>
@@ -13,7 +13,7 @@
   <!-- Status -->
   <ion-card>
     <ion-card-content>
-      <h2>🛰️ Estado del Sistema GPS</h2>
+      <h2>Estado del Sistema GPS</h2>
       <p><strong>Empleados activos:</strong> {{ employees.length }}</p>
       <p><strong>Última actualización:</strong> {{ lastUpdate | date:'HH:mm:ss' }}</p>
     </ion-card-content>
@@ -36,7 +36,7 @@
   <!-- Employees List -->
   <ion-card *ngIf="employees.length > 0">
     <ion-card-header>
-      <ion-card-title>👥 Empleados con GPS Activo</ion-card-title>
+      <ion-card-title>Empleados con GPS Activo</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -45,8 +45,8 @@
           <ion-label>
             <h3>{{ emp.employeeName }}</h3>
             <p>Rol: {{ emp.role }}</p>
-            <p>📍 Ubicación: {{ emp.latitude }}, {{ emp.longitude }}</p>
-            <p>🕒 Última actualización: {{ emp.timestamp | date:'HH:mm:ss' }}</p>
+            <p>Ubicación: {{ emp.latitude }}, {{ emp.longitude }}</p>
+            <p>Última actualización: {{ emp.timestamp | date:'HH:mm:ss' }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -69,17 +69,12 @@
   <!-- Test Backend -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>🔧 Información del Sistema</ion-card-title>
+      <ion-card-title>Información del Sistema</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p><strong>Backend URL:</strong> http://localhost:8081</p>
       <p><strong>Endpoint GPS:</strong> /api/locations/active</p>
-      <p><strong>Estado:</strong> {{ error ? '❌ Error' : '✅ Conectado' }}</p>
-      
-      <ion-button expand="block" (click)="refresh()" fill="outline">
-        <ion-icon name="refresh" slot="start"></ion-icon>
-        Probar Conexión
-      </ion-button>
+      <p><strong>Estado:</strong> {{ error ? 'Error' : 'Conectado' }}</p>
     </ion-card-content>
   </ion-card>
 </ion-content>
